@@ -27,6 +27,7 @@ const runTask = () => {
         'Add',
         'View',
         'Update',
+        'Delete',
         'exit'
       ]
     })
@@ -35,15 +36,15 @@ const runTask = () => {
         case 'Add':
           addTask();
           break;
-        
         case 'View':
           viewTask();
           break;
-        
         case 'Update':
           updateTask();
           break;
-
+        case 'Delete':
+          deleteTask();
+          break;
         case 'exit':
           connection.end();
           break;
@@ -79,5 +80,94 @@ const addTask = () => {
           runTask();
           break;
       }
+    });
+}
+
+const viewTask = () => {
+  inquirer
+    .prompt({
+      name: 'action',
+      type: 'list',
+      message: 'What would you like to view?',
+      choices: [
+        'Departments',
+        'Roles',
+        'Employees',
+        'Back to Main Menu'
+      ]
     })
+    .then((answer) => {
+      switch (answer.action) {
+        case 'Departments':
+          viewDepartments();
+          break;
+        case 'Roles':
+          viewRoles();
+          break;
+        case 'Employees':
+          viewEmployees();
+          break;
+        case 'Back to Main Menu':
+          runTask();
+          break;
+      }
+    })
+}
+
+const updateTask = () => {
+  inquirer
+    .prompt({
+      name: 'action',
+      type: 'list',
+      message: 'What would you like to update?',
+      choices: [
+        'Employee Roles',
+        'Employee Managers',
+        'Back to Main Menu'
+      ]
+    })
+    .then((answer) => {
+      switch (answer.action) {
+        case 'Employee Roles':
+          updateEmployeeRole();
+          break;
+        case 'Employee Managers':
+          updateEmployeeManger();
+          break;
+        case 'Back to Main Menu':
+          runTask();
+          break;
+      }
+    })
+}
+
+const deleteTask = () => {
+  inquirer
+    .prompt({
+      name: 'action',
+      type: 'list',
+      message: 'What would you like to delete?',
+      choices: [
+        'A Department',
+        'A Role',
+        'A Employee',
+        'Back to Main Menu'
+      ]
+    })
+    .then((answer) => {
+      switch (answer.action) {
+        case 'A Department':
+          deleteDepartment();
+          break;
+        case 'A Role':
+          deleteRole();
+          break;
+        case 'An Employee':
+          deleteEmployee();
+          break;
+        case 'Back to Main Menu':
+          runTask();
+          break;
+      }
+    });
 }
