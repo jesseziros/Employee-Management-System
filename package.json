@@ -1,0 +1,32 @@
+{
+  "name": "employee-management-system",
+  "version": "1.0.0",
+  "description": "Gives companies a way to manage there employee's",
+  "main": "server.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesseziros/Employee-Management-System.git"
+  },
+  "keywords": [
+    "Employee",
+    "Management",
+    "mySQL",
+    "Database"
+  ],
+  "author": "Jesse Ziros",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jesseziros/Employee-Management-System/issues"
+  },
+  "homepage": "https://github.com/jesseziros/Employee-Management-System#readme"
+}
