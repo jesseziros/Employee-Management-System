@@ -7,7 +7,7 @@ const log = (msg) => console.log(msg)
 const connection = mysql.createConnection({
   host: 'localhost',
   PORT: 3306,
-  username: 'root',
+  user: 'root',
   password: process.env.PASSWORD,
   database: 'employee_managementDB'
 });
@@ -26,7 +26,8 @@ const runTask = () => {
       choices: [
         'Add',
         'View',
-        'Update'
+        'Update',
+        'exit'
       ]
     })
     .then((answer) => {
@@ -59,7 +60,8 @@ const addTask = () => {
       choices: [
         'A Department',
         'A Role',
-        'An Employee'
+        'An Employee',
+        'Back to Main Menu'
       ]
     })
     .then((answer) => {
