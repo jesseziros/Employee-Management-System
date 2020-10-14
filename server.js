@@ -1,7 +1,6 @@
 require('dotenv').config();
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const { connect } = require('http2');
 //const Add = require('./tasks/add')
 
 const log = (msg) => console.log(msg)
@@ -50,6 +49,7 @@ const runTask = () => {
         case 'exit':
           connection.end();
           break;
+
       }
     });
 }
@@ -61,21 +61,22 @@ const addTask = () => {
       type: 'list',
       message: 'What you like to add?',
       choices: [
-        'A Department',
-        'A Role',
-        'An Employee',
+        'Department',
+        'Role',
+        'Employee',
         'Back to Main Menu'
       ]
     })
     .then((answer) => {
+      log(answer)
       switch (answer.action) {
-        case 'A Department':
+        case 'Department':
           addDepartment();
           break;
-        case 'A Role':
+        case 'Role':
           addRole();
           break;
-        case 'An Employee':
+        case 'Employee':
           addEmployee();
           break;
         case 'Back to Main Menu':
@@ -93,12 +94,12 @@ const addDepartment = () => {
       message: 'Input desired department:'
     })
     .then((answer) => {
-      let query = 'INSERT INTO department WHERE id = ?';
-      log(query);
+      let query = 'INSERT INTO department (name) VALUES (?) ';
       connection.query(query, [answer.name], (err, res) => {
         if (err) throw err;
-        log(res.name)
-      })
+        log(answer)
+        log(res)
+      });
       runTask();
     });
 };
@@ -111,16 +112,17 @@ const addRole = () => {
       message: 'Input role title, salary and department_id:'
     })
     .then((answer) => {
-      let query = 'INSERT INTO role WHERE id = ?, ?, ?';
-      log(query);
-      connection.query(query, [answer.title, answer.salary, answer.department_id], (err,res) => {
+      let query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+      connection.query(query, [answer.title, answer.salary, answer.department_id], (err, res) => {
         if (err) throw err;
+        log(answer)
+        log(res)
       });
       runTask();
     });
 };
 
-const addEmployee = () =>{
+const addEmployee = () => {
   inquirer
     .prompt({
       name: 'employee',
@@ -129,9 +131,9 @@ const addEmployee = () =>{
     })
     .then((answer) => {
       let query = 'INPUT INTO employee WHERE id = ?, ?, ?, ?'
-      log(query);
       connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
-        if(err) throw err;
+        if (err) throw err;
+        log(answer)
         log(res);
       });
       runTask();
@@ -203,21 +205,21 @@ const deleteTask = () => {
       type: 'list',
       message: 'What would you like to delete?',
       choices: [
-        'A Department',
-        'A Role',
-        'An Employee',
+        'Department',
+        'Role',
+        'Employee',
         'Back to Main Menu'
       ]
     })
     .then((answer) => {
       switch (answer.action) {
-        case 'A Department':
+        case 'Department':
           deleteDepartment();
           break;
-        case 'A Role':
+        case 'Role':
           deleteRole();
           break;
-        case 'An Employee':
+        case 'Employee':
           deleteEmployee();
           break;
         case 'Back to Main Menu':
