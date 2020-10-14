@@ -93,7 +93,7 @@ const addDepartment = () => {
       message: 'Input desired department:'
     })
     .then((answer) => {
-      let query = 'INSERT INTO department (name) VALUES (?) ';
+      let query = 'INSERT INTO department WHERE id = ?';
       log(query);
       connection.query(query, [answer.name], (err, res) => {
         if (err) throw err;
@@ -111,7 +111,7 @@ const addRole = () => {
       message: 'Input role title, salary and department_id:'
     })
     .then((answer) => {
-      let query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+      let query = 'INSERT INTO role WHERE id = ?, ?, ?';
       log(query);
       connection.query(query, [answer.title, answer.salary, answer.department_id], (err,res) => {
         if (err) throw err;
@@ -128,7 +128,7 @@ const addEmployee = () =>{
       message: "Input employee's first name, last, name,role_id and manager_id:"
     })
     .then((answer) => {
-      let query = 'INPUT INTO employee (first_name, last_name, role_id, manager_id) VALUE (?, ?, ?, ?)'
+      let query = 'INPUT INTO employee WHERE id = ?, ?, ?, ?'
       log(query);
       connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
         if(err) throw err;
