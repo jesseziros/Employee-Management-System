@@ -1,6 +1,8 @@
 require('dotenv').config();
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const { connect } = require('http2');
+//const Add = require('./tasks/add')
 
 const log = (msg) => console.log(msg)
 
@@ -80,8 +82,61 @@ const addTask = () => {
           runTask();
           break;
       }
-    });
+    })
 }
+
+const addDepartment = () => {
+  inquirer
+    .prompt({
+      name: 'name',
+      type: 'input',
+      message: 'Input desired department:'
+    })
+    .then((answer) => {
+      let query = 'INSERT INTO department (name) VALUES (?) ';
+      log(query);
+      connection.query(query, [answer.name], (err, res) => {
+        if (err) throw err;
+        log(res.name)
+      })
+      runTask();
+    });
+};
+
+const addRole = () => {
+  inquirer
+    .prompt({
+      name: 'role',
+      type: 'input',
+      message: 'Input role title, salary and department_id:'
+    })
+    .then((answer) => {
+      let query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+      log(query);
+      connection.query(query, [answer.title, answer.salary, answer.department_id], (err,res) => {
+        if (err) throw err;
+      });
+      runTask();
+    });
+};
+
+const addEmployee = () =>{
+  inquirer
+    .prompt({
+      name: 'employee',
+      type: 'input',
+      message: "Input employee's first name, last, name,role_id and manager_id:"
+    })
+    .then((answer) => {
+      let query = 'INPUT INTO employee (first_name, last_name, role_id, manager_id) VALUE (?, ?, ?, ?)'
+      log(query);
+      connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
+        if(err) throw err;
+        log(res);
+      });
+      runTask();
+    });
+};
 
 const viewTask = () => {
   inquirer
@@ -150,7 +205,7 @@ const deleteTask = () => {
       choices: [
         'A Department',
         'A Role',
-        'A Employee',
+        'An Employee',
         'Back to Main Menu'
       ]
     })
