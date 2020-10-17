@@ -1,9 +1,11 @@
 require('dotenv').config();
+require("console.table")
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 //const Add = require('./tasks/add')
 
-const log = (msg) => console.log(msg)
+const log = (msg) => console.log(msg);
+const table = (msg) => console.table(msg);
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -171,6 +173,33 @@ const viewTask = () => {
     })
 }
 
+const viewDepartments = () => {
+  let query = 'SELECT * FROM department'
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    table(res);
+  })
+  runTask();
+}
+
+const viewRoles = () => {
+  let query = 'SELECT * FROM role'
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    table(res);
+  })
+  runTask();
+}
+
+const viewEmployees = () =>{
+  let query = 'SELECT * FROM employee'
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    table(res);
+  })
+  runTask();
+};
+
 const updateTask = () => {
   inquirer
     .prompt({
@@ -197,6 +226,13 @@ const updateTask = () => {
       }
     })
 }
+
+const updateEmployeeRole = () => {
+  let query = 'UPDATE role SET salary = newvalue WHERE role_id = id'
+  connection query = 
+}
+
+//UPDATE *role* SET salary = *newvalue* WHERE *role_id* = id
 
 const deleteTask = () => {
   inquirer
