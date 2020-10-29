@@ -2,7 +2,6 @@ require('dotenv').config();
 require("console.table")
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-//const Add = require('./tasks/add')
 
 const log = (msg) => console.log(msg);
 const table = (msg) => console.table(msg);
@@ -228,8 +227,24 @@ const updateTask = () => {
 }
 
 const updateEmployeeRole = () => {
-  let query = 'UPDATE role SET salary = newvalue WHERE role_id = id'
-  connection query = 
+  let employeeChoices =[];
+  let employees;
+  let query = 'SELECT * FROM employee';
+  connection.query(query, (err, res) => {
+    employees = res
+    if (err) throw err;
+    for (let i = 0; i < employees.length; i++) {
+      employees.push(employeeChoices);
+      log(employeeChoices);
+    }
+    inquirer
+    .prompt({
+      name: 'employee',
+      type: 'list',
+      message: 'Which employee would you like to update?',
+      choices: employeeChoices
+    })
+  })
 }
 
 //UPDATE *role* SET salary = *newvalue* WHERE *role_id* = id
