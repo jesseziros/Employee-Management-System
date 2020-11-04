@@ -98,8 +98,7 @@ const addDepartment = () => {
       let query = 'INSERT INTO department (name) VALUES (?) ';
       connection.query(query, [answer.name], (err, res) => {
         if (err) throw err;
-        log(answer)
-        log(res)
+        log("Added Department")
       });
       runTask();
     });
@@ -116,8 +115,7 @@ const addRole = () => {
       let query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
       connection.query(query, [answer.title, answer.salary, answer.department_id], (err, res) => {
         if (err) throw err;
-        log(answer)
-        log(res)
+        log("Added Role")
       });
       runTask();
     });
@@ -134,8 +132,7 @@ const addEmployee = () => {
       let query = 'INPUT INTO employee WHERE id = ?, ?, ?, ?'
       connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
         if (err) throw err;
-        log(answer)
-        log(res);
+        log("Added Employee")
       });
       runTask();
     });
@@ -234,8 +231,8 @@ const updateEmployeeRole = () => {
     employees = res
     if (err) throw err;
     for (let i = 0; i < employees.length; i++) {
-      employees.push(employeeChoices);
-      log(employeeChoices);
+      employeeChoices.push(employees[i]);
+
     }
     inquirer
     .prompt({
@@ -244,10 +241,12 @@ const updateEmployeeRole = () => {
       message: 'Which employee would you like to update?',
       choices: employeeChoices
     })
+    // .then((answer) => {
+    // })
   })
 }
 
-//UPDATE *role* SET salary = *newvalue* WHERE *role_id* = id
+//UPDATE *role* SET salary = ** WHERE *role_id* = id
 
 const deleteTask = () => {
   inquirer
