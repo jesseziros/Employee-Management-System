@@ -228,11 +228,14 @@ const updateEmployeeRole = () => {
   let employees;
   let query = 'SELECT * FROM employee';
   connection.query(query, (err, res) => {
+    log(res)
     employees = res
     if (err) throw err;
     for (let i = 0; i < employees.length; i++) {
-      employeeChoices.push(employees[i]);
-
+      let newEmployee = {}
+      newEmployee.name = employees[i].first_name + " " + employees[i].last_name
+      newEmployee.value = employees[i].id
+      employeeChoices.push(newEmployee);
     }
     inquirer
     .prompt({
