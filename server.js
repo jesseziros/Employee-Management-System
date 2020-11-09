@@ -99,42 +99,68 @@ const addDepartment = () => {
       connection.query(query, [answer.name], (err, res) => {
         if (err) throw err;
         log("Added Department")
+        runTask();
       });
-      runTask();
     });
 };
 
 const addRole = () => {
   inquirer
-    .prompt({
-      name: 'role',
+    .prompt([{
+      name: 'department_id',
+      type: 'inpute',
+      message: 'Input roles department id',
+    },
+    {
+      name: 'title',
       type: 'input',
-      message: 'Input role title, salary and department_id:'
-    })
+      message: 'Input role title:',
+    },
+    {
+      name: 'salary',
+      type: 'input',
+      message: 'Input role salary:',
+    }])
     .then((answer) => {
-      let query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
-      connection.query(query, [answer.title, answer.salary, answer.department_id], (err, res) => {
+      console.log(answer)
+      let query = 'INSERT INTO role (department_id, title, salary) VALUES (?, ?, ?)';
+      connection.query(query, [answer.department_id, answer.title, answer.salary], (err, res) => {
         if (err) throw err;
         log("Added Role")
+        runTask();
       });
-      runTask();
     });
 };
 
 const addEmployee = () => {
   inquirer
-    .prompt({
-      name: 'employee',
+    .prompt([{
+      name: 'first_name',
       type: 'input',
-      message: "Input employee's first name, last, name,role_id and manager_id:"
-    })
+      message: "Input employee's first name:",
+    },
+    {
+      name: 'last_name',
+      type: 'input',
+      message: 'Input employees last name:',
+    },
+    {
+      name: 'role_id',
+      type: 'input',
+      message: 'Input employees role id:',
+    },
+    {
+      name: 'manager_id',
+      type: 'input',
+      message: 'Input employees manager_id:'
+    }])
     .then((answer) => {
-      let query = 'INPUT INTO employee WHERE id = ?, ?, ?, ?'
+      let query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)'
       connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
         if (err) throw err;
         log("Added Employee")
+        runTask();
       });
-      runTask();
     });
 };
 
@@ -174,8 +200,8 @@ const viewDepartments = () => {
   connection.query(query, (err, res) => {
     if (err) throw err;
     table(res);
+    runTask();
   })
-  runTask();
 }
 
 const viewRoles = () => {
@@ -192,8 +218,8 @@ const viewEmployees = () => {
   connection.query(query, (err, res) => {
     if (err) throw err;
     table(res);
+    runTask();
   })
-  runTask();
 };
 
 const updateTask = () => {
@@ -277,8 +303,6 @@ const updateEmployeeRole = () => {
   })
 }
 
-//UPDATE employee SET role = ? WHERE role_id = ?
-
 const updateEmployeeManger = () => {
   let employeeChoices = [];
   let employees;
@@ -356,20 +380,58 @@ const deleteTask = () => {
 
 const deleteDepartment = () => {
   let departmentChoices = [];
-  let department;
   let query = 'SELECT * FROM department'
   connection.query(query, (err, res) => {
-    departement = res;
     if (err) throw err;
-    for (let i = 0; i < department.length; i++) {
+    for (let i = 0; i < res.length; i++) {
       let newDepartment = {};
-      newDepartment.name = departement[i].name;
-      newDepartment.value = department[i].id
-      departmentChoices.push(newDepartment);
+      newDepartment.name = res[i].name;
+      newDepartment.value = res[i].id;
+      departmentChoices.push(newDepartment)
     }
-  })
-  .then((answer) => {
     inquirer
+      .prompt({
+        name: 'department',
+        type: 'list',
+        message: 'What department would you like to delete?',
+        choices: departmentChoices
+      })
+      .then((answer) => {
+        let query = 'DELETE FROM department WHERE id = ?'
+        connection.query(query, [answer.department], (err, res) => {
+          if (err) throw err;
+          console.log("Deleted department")
+          runTask();
+        })
+      })
+  })
+}
 
+const deleteRole = () => {
+  let roleChoices = [];
+  let query = 'SELECT * FROM role'
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    for (let i = 0; i < res.length; i++) {
+      let newRole = {};
+      newRole.title = res[i].name;
+      newRole.value = res[i].id;
+      roleChoices.push(newRole)
+    }
+    inquirer
+      .prompt({
+        name: 'role',
+        type: 'list',
+        message: 'What role would you like to delete',
+        choice: roleChoices
+      })
+      .then((answer) => {
+        let query = 'DELETE FROM role WHERE id = ?'
+        connection.query(query, [answer.role], (err, res) => {
+          if(err) throw err;
+          console.log("Deleted role");
+          runTask();
+        })
+      })
   })
 }
