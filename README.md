@@ -7,6 +7,8 @@
 
   ## Description
   This command line application allows you to effectively manage all of your employees in one spot. You will be able to update, delete, view and add employees as needed.
+  Here's a link to an operational video
+  https://drive.google.com/file/d/1DnEITj_WbrpaV8n47cCdjbEM3LOVlIY7/view
 
   ## Table
   * [Installation](##Installation)
