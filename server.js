@@ -209,8 +209,8 @@ const viewRoles = () => {
   connection.query(query, (err, res) => {
     if (err) throw err;
     table(res);
+    runTask();
   })
-  runTask();
 }
 
 const viewEmployees = () => {
@@ -251,15 +251,13 @@ const updateTask = () => {
 
 const updateEmployeeRole = () => {
   let employeeChoices = [];
-  let employees;
   let query = 'SELECT * FROM employee';
   connection.query(query, (err, res) => {
-    employees = res
     if (err) throw err;
-    for (let i = 0; i < employees.length; i++) {
+    for (let i = 0; i < res.length; i++) {
       let newEmployee = {}
-      newEmployee.name = employees[i].first_name + " " + employees[i].last_name
-      newEmployee.value = employees[i].id
+      newEmployee.name = res[i].first_name + " " + res[i].last_name
+      newEmployee.value = res[i].id
       employeeChoices.push(newEmployee);
     }
     inquirer
@@ -272,14 +270,13 @@ const updateEmployeeRole = () => {
       .then((answer) => {
         log(answer)
         let roleChoices = [];
-        let roles;
         let query = 'SELECT * FROM role';
         connection.query(query, (err, res) => {
           if (err) throw err;
-          for (let i = 0; i < roles.length; i++) {
+          for (let i = 0; i < res.length; i++) {
             let newRole = {}
-            newRole.name = roles[i].title
-            newRole.value = roles[i].id
+            newRole.name = res[i].title
+            newRole.value = res[i].id
             roleChoices.push(newRole);
           }
           inquirer
@@ -289,10 +286,10 @@ const updateEmployeeRole = () => {
               message: 'Which role would you like to assign this employee',
               choices: roleChoices
             })
-            .then((answer) => {
-              log(answer)
-              let query = 'UPDATE employee SET ? WHERE ?';
-              connection.query(query, [answer.role, answer.id], (err, res) => {
+            .then((response) => {
+              console.log(response)
+              let query = 'UPDATE employee SET role_id = ? WHERE id = ?';
+              connection.query(query, [response.role, answer.employee], (err, res) => {
                 if (err) throw err;
                 log('Employee role updated!')
                 runTask();
@@ -414,7 +411,7 @@ const deleteRole = () => {
     if (err) throw err;
     for (let i = 0; i < res.length; i++) {
       let newRole = {};
-      newRole.title = res[i].name;
+      newRole.name = res[i].title;
       newRole.value = res[i].id;
       roleChoices.push(newRole)
     }
@@ -423,13 +420,42 @@ const deleteRole = () => {
         name: 'role',
         type: 'list',
         message: 'What role would you like to delete',
-        choice: roleChoices
+        choices: roleChoices
       })
       .then((answer) => {
         let query = 'DELETE FROM role WHERE id = ?'
         connection.query(query, [answer.role], (err, res) => {
           if(err) throw err;
           console.log("Deleted role");
+          runTask();
+        })
+      })
+  })
+}
+
+const deleteEmployee = () => {
+  let employeeChoices = [];
+  let query = 'SELECT * FROM employee'
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    for (let i = 0; i < res.length; i++) {
+      let newEmployee = {};
+      newEmployee.name = res[i].first_name + " " + res[i].last_name;
+      newEmployee.value = res[i].id;
+      employeeChoices.push(newEmployee);
+    }
+    inquirer
+      .prompt({
+        name: 'employee',
+        type: 'list',
+        message: 'Which employee would you like to delete?',
+        choices: employeeChoices
+      })
+      .then((answer) => {
+        let query = 'DELETE FROM employee WHERE id = ?'
+        connection.query(query, [answer.employee], (err, res) => {
+          if (err) throw err;
+          console.log("Employee deleted");
           runTask();
         })
       })
