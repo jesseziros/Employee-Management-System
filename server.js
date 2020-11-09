@@ -187,7 +187,7 @@ const viewRoles = () => {
   runTask();
 }
 
-const viewEmployees = () =>{
+const viewEmployees = () => {
   let query = 'SELECT * FROM employee'
   connection.query(query, (err, res) => {
     if (err) throw err;
@@ -224,11 +224,10 @@ const updateTask = () => {
 }
 
 const updateEmployeeRole = () => {
-  let employeeChoices =[];
+  let employeeChoices = [];
   let employees;
   let query = 'SELECT * FROM employee';
   connection.query(query, (err, res) => {
-    log(res)
     employees = res
     if (err) throw err;
     for (let i = 0; i < employees.length; i++) {
@@ -238,18 +237,91 @@ const updateEmployeeRole = () => {
       employeeChoices.push(newEmployee);
     }
     inquirer
-    .prompt({
-      name: 'employee',
-      type: 'list',
-      message: 'Which employee would you like to update?',
-      choices: employeeChoices
-    })
-    // .then((answer) => {
-    // })
+      .prompt({
+        name: 'employee',
+        type: 'list',
+        message: 'Which employee would you like to update?',
+        choices: employeeChoices
+      })
+      .then((answer) => {
+        log(answer)
+        let roleChoices = [];
+        let roles;
+        let query = 'SELECT * FROM role';
+        connection.query(query, (err, res) => {
+          if (err) throw err;
+          for (let i = 0; i < roles.length; i++) {
+            let newRole = {}
+            newRole.name = roles[i].title
+            newRole.value = roles[i].id
+            roleChoices.push(newRole);
+          }
+          inquirer
+            .prompt({
+              name: 'role',
+              type: 'list',
+              message: 'Which role would you like to assign this employee',
+              choices: roleChoices
+            })
+            .then((answer) => {
+              log(answer)
+              let query = 'UPDATE employee SET ? WHERE ?';
+              connection.query(query, [answer.role, answer.id], (err, res) => {
+                if (err) throw err;
+                log('Employee role updated!')
+                runTask();
+              })
+            })
+        })
+      })
   })
 }
 
-//UPDATE *role* SET salary = ** WHERE *role_id* = id
+//UPDATE employee SET role = ? WHERE role_id = ?
+
+const updateEmployeeManger = () => {
+  let employeeChoices = [];
+  let employees;
+  let query = 'SELECT * FROM employee';
+  connection.query(query, (err, res) => {
+    employees = res
+    if (err) throw err;
+    for (let i = 0; i < employees.length; i++) {
+      let newEmployee = {}
+      newEmployee.name = employees[i].first_name + " " + employees[i].last_name
+      newEmployee.value = employees[i].id
+      employeeChoices.push(newEmployee);
+    }
+    inquirer
+      .prompt({
+        name: 'employee',
+        type: 'list',
+        message: 'Which employee would you like to update?',
+        choices: employeeChoices
+      })
+      .then((answer) => {
+        console.log(answer)
+        let managerChoices = employeeChoices.filter(employee => employee.value !== answer.employee)
+        console.log(managerChoices);
+
+        inquirer
+          .prompt({
+            name: 'manager',
+            type: 'list',
+            message: 'What manager would you like to assign?',
+            choices: managerChoices
+          })
+          .then((response) =>{
+            let query = 'UPDATE employee SET manager_id = ? WHERE id = ?';
+            connection.query(query, [response.manager, answer.employee], (err, res) => {
+              if (err) throw err;
+              console.log("Completed manager selection!")
+              runTask();
+          })
+        })
+      })
+  })
+}
 
 const deleteTask = () => {
   inquirer
@@ -280,4 +352,24 @@ const deleteTask = () => {
           break;
       }
     });
+}
+
+const deleteDepartment = () => {
+  let departmentChoices = [];
+  let department;
+  let query = 'SELECT * FROM department'
+  connection.query(query, (err, res) => {
+    departement = res;
+    if (err) throw err;
+    for (let i = 0; i < department.length; i++) {
+      let newDepartment = {};
+      newDepartment.name = departement[i].name;
+      newDepartment.value = department[i].id
+      departmentChoices.push(newDepartment);
+    }
+  })
+  .then((answer) => {
+    inquirer
+
+  })
 }
